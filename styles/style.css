@@ -1,3 +1,12 @@
+:root {
+    --primary-font: 'Nunito', sans-serif;
+    --primary-color: #D64933;
+    --secondary-color: #92DCE5;
+    --light-color: #EEE5E9;
+    --dark-color: #2b303a;
+    --grey-color: #7c7c7c;
+}
+
 *,
 *::before
 *::after {
@@ -8,4 +17,5 @@
 
 body {
     font-size: 16px;
+    font-family: var(--primary-font);
 }

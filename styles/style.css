@@ -66,7 +66,30 @@ body {
 
 #main-section #feed {
     flex: 4;
-    text-align: center;
+}
+
+#main-section .feed-section {
+    padding: 2rem 1rem;
+}
+
+#main-section .feed-section .section-title {
+    color: var(--primary-color);
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 0.125rem;
+    line-height: 2rem;
+}
+
+#main-section .feed-section .section-subtitles {
+    font-size: 1.25rem;
+    font-weight: 200;
+    margin-bottom: 1rem;
+}
+
+#main-section #feed #network {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 #footer {
@@ -75,7 +98,7 @@ body {
 
 .user-profile {
     background-color: var(--darker-color);
-    max-width: 320px;
+    max-width: 280px;
     padding: 1rem;
     border-radius: 0.5rem;
 }
@@ -87,6 +110,7 @@ body {
 
 .user-profile .personal-data {
     margin-top: 1rem;
+    text-align: center;
 }
 
 .user-profile .user-data .full-name {

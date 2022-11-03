@@ -2,18 +2,27 @@ let networkUsers = [];
 let skills = {};
 let positions = [];
 
+const displayedUsers = 10;
+
+const networkFeedElement = document.getElementById('network');
+
 function getNetworkUsers() {
     let getNetworkUsersRequest = fetch(
-        'https://random-data-api.com/api/v2/users?size=50'
+        'https://random-data-api.com/api/v2/users?size=100'
     );
     getNetworkUsersRequest
         .then((Response) => Response.json())
         .then((data) => {
             networkUsers = data;
+            let currentDisplayedUsers = 0;
             for (let networkUser of networkUsers) {
                 const user = new NetworkUser(networkUser);
-                console.log(user);
-                break;
+
+                if (currentDisplayedUsers !== maxDisplayedUsers) {
+                    createUserProfileElement(user);
+                    currentDisplayedUsers++;
+                }
+
                 addSkillToList(networkUser.employment.mainSkill);
                 addPositionToList(networkUser.employment.position);
             }
@@ -37,6 +46,42 @@ function addPositionToList(position) {
     } else {
         positions[position] = 1;
     }
+}
+
+function createUserProfileElement(user) {
+    const userProfileElement = document.createElement('div');
+    userProfileElement.classList.add('user-profile');
+    userProfileElement.id = `user-profile-${user.id}`;
+
+    const userProfileAvatarElement = document.createElement('img');
+    userProfileAvatarElement.classList.add('avatar');
+    userProfileAvatarElement.src = user.personalData.avatar;
+
+    userProfileElement.appendChild(userProfileAvatarElement);
+
+    const userProfilePersonalDataElement = document.createElement('div');
+    userProfilePersonalDataElement.classList.add('personal-data');
+
+    const userProfilePersonalDataName = document.createElement('p');
+    userProfilePersonalDataName.classList.add('full-name');
+
+    const userFullName = document.createTextNode(
+        `${user.personalData.firstName} ${user.personalData.lastName}`
+    );
+    userProfilePersonalDataName.appendChild(userFullName);
+
+    const userProfilePersonalDataJobTitle = document.createElement('p');
+    userProfilePersonalDataJobTitle.classList.add('job-title');
+
+    const userJobTitle = document.createTextNode(user.employment.position);
+    userProfilePersonalDataJobTitle.appendChild(userJobTitle);
+
+    userProfilePersonalDataElement.appendChild(userProfilePersonalDataName);
+    userProfilePersonalDataElement.appendChild(userProfilePersonalDataJobTitle);
+
+    userProfileElement.appendChild(userProfilePersonalDataElement);
+
+    networkFeedElement.appendChild(userProfileElement);
 }
 
 getNetworkUsers();

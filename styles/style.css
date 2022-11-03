@@ -72,3 +72,30 @@ body {
 #footer {
     text-align: center;
 }
+
+.user-profile {
+    background-color: var(--darker-color);
+    max-width: 320px;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.user-profile .avatar {
+    width: 100%;
+    border-radius: 50%;
+}
+
+.user-profile .personal-data {
+    margin-top: 1rem;
+}
+
+.user-profile .user-data .full-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+.user-profile .personal-data .job-title {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+}

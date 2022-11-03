@@ -12,6 +12,8 @@ function getNetworkUsers() {
             networkUsers = data;
             for (let networkUser of networkUsers) {
                 const user = new NetworkUser(networkUser);
+                console.log(user);
+                break;
                 addSkillToList(networkUser.employment.mainSkill);
                 addPositionToList(networkUser.employment.position);
             }
@@ -72,7 +74,7 @@ class NetworkUsers {
         };
     }
 
-    setUserEmploymentData(employment) {
+    setUserEmploymentData(employmentData) {
         this.employment = {
             position: employment.tittle,
             mainSkill: employment.key_skill,

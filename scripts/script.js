@@ -1,8 +1,8 @@
 let networkUsers = [];
 let skills = {};
-let positions = [];
+let positions = {};
 
-const displayedUsers = 10;
+const maxDisplayedUsers = 10;
 
 const networkFeedElement = document.getElementById('network');
 
@@ -23,8 +23,8 @@ function getNetworkUsers() {
                     currentDisplayedUsers++;
                 }
 
-                addSkillToList(networkUser.employment.mainSkill);
-                addPositionToList(networkUser.employment.position);
+                addSkillToList(user.employment.mainSkill);
+                addPositionToList(user.employment.position);
             }
         })
         .catch((error) => {
@@ -85,14 +85,13 @@ function createUserProfileElement(user) {
 }
 
 getNetworkUsers();
-class NetworkUsers {
+class NetworkUser {
     id;
     address;
     personalData;
     employment;
 
     constructor(data) {
-        // console.log(data);
         this.id = data.id;
 
         this.setUserAddress(data.address);
@@ -121,8 +120,8 @@ class NetworkUsers {
 
     setUserEmploymentData(employmentData) {
         this.employment = {
-            position: employment.tittle,
-            mainSkill: employment.key_skill,
+            position: employmentData.title,
+            mainSkill: employmentData.key_skill,
         };
     }
 }

@@ -9,14 +9,20 @@ let positions = {};
 
 let currentUser = {};
 
-const maxDisplayedUsers = 10;
+const maxDisplayedUsers = 7;
+let totalPages = 0;
+let currentPage = 2;
 
 const networkFeedElement = document.getElementById('network');
+const networkFeedResultNumberElement =
+    document.getElementById('results-number');
+const networkFeedPaginationElement =
+    document.getElementById('network-pagination');
 const accountElement = document.getElementById('account');
 
 function getNetworkUsers() {
     let getNetworkUsersRequest = fetch(
-        'https://random-data-api.com/api/v2/users?size=51'
+        'https://random-data-api.com/api/v2/users?size=43'
     );
     getNetworkUsersRequest
         .then((Response) => Response.json())
@@ -28,6 +34,9 @@ function getNetworkUsers() {
             createUserProfileElement(currentUser, accountElement);
             // addAdditionalData()
             networkUsers = networkUsers.slice(1);
+            totalPages = Math.ceil(networkUsers.length / maxDisplayedUsers);
+
+            getPagesConfiguration();
 
             for (let networkUser of networkUsers) {
                 const user = new NetworkUser(networkUser);
@@ -109,14 +118,28 @@ function createUserProfileElement(user, parentElement) {
 
     userProfilePersonalDataName.appendChild(userFullName);
 
+    const userProfilePersonalDataJobTitle = document.createElement('p');
+    userProfilePersonalDataJobTitle.classList.add('job-title');
+
+    const userJobTitle = document.createTextNode(user.employment.position);
+    userProfilePersonalDataJobTitle.appendChild(userJobTitle);
+
+    userProfilePersonalDataElement.appendChild(userProfilePersonalDataName);
+    userProfilePersonalDataElement.appendChild(userProfilePersonalDataJobTitle);
+
+    userProfileElement.appendChild(userProfilePersonalDataElement);
+
     const userPlanElement = document.createElement('div');
-    userPlanElement.classList.add('subscription-plan', user.subscription.status.toLowerCase());
+    userPlanElement.classList.add(
+        'subscription-plan',
+        user.subscription.status.toLowerCase()
+    );
 
     const userPlanText = document.createTextNode(user.subscription.plan);
 
     userPlanElement.appendChild(userPlanText);
 
-    userProfileElement.appendChild(userPlanElement)
+    userProfileElement.appendChild(userPlanElement);
 
     if (parentElement === accountElement) {
         const userNameElement = document.createElement('span');
@@ -139,18 +162,31 @@ function createUserProfileElement(user, parentElement) {
         userProfilePersonalDataName.appendChild(userBioElement);
     }
 
-    const userProfilePersonalDataJobTitle = document.createElement('p');
-    userProfilePersonalDataJobTitle.classList.add('job-title');
-
-    const userJobTitle = document.createTextNode(user.employment.position);
-    userProfilePersonalDataJobTitle.appendChild(userJobTitle);
-
-    userProfilePersonalDataElement.appendChild(userProfilePersonalDataName);
-    userProfilePersonalDataElement.appendChild(userProfilePersonalDataJobTitle);
-
-    userProfileElement.appendChild(userProfilePersonalDataElement);
-
     parentElement.appendChild(userProfileElement);
+}
+
+function getPagesConfiguration() {
+    for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+        const pageNumberElement = document.createElement('div');
+        pageNumberElement.classList.add('page-number');
+
+        const pageNumberText = document.createTextNode(pageNumber);
+        pageNumberElement.appendChild(pageNumberText);
+
+        networkFeedPaginationElement.appendChild(pageNumberElement);
+    }
+
+    setResultsNumberElement();
+}
+
+function setResultsNumberElement() {
+    const startingNumber = (currentPage - 1) * maxDisplayedUsers + 1;
+    const endingNumber =
+        currentPage === totalPages
+            ? networkUsers.length
+            : currentPage * maxDisplayedUsers;
+
+    networkFeedResultNumberElement.textContent = `Showing users from ${startingNumber} to ${endingNumber} out of ${networkUsers.length}`;
 }
 
 getNetworkUsers();

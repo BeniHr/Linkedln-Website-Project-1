@@ -83,6 +83,21 @@ body {
     flex-wrap: wrap;
 }
 
+#main-section #feed #network-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+}
+
+#main-section #feed #network-pagination .page-number {
+    padding: 0.25rem 0.5rem;
+    background-color: var(--primary-color);
+    border-radius: 0.125rem;
+    font-weight: bold;
+}
+
 #footer {
     text-align: center;
 }
@@ -156,11 +171,11 @@ body {
     text-align: center;
 }
 
-.user-profile .user-data .full-name {
+.user-profile .personal-data .full-name {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--secondary-color);
-    line-height: 1rem;
+    line-height: 1.4rem;
     margin-bottom: 0.5rem;
 }
 
@@ -170,6 +185,6 @@ body {
 }
 
 .user-profile .personal-data .job-title {
-    font-size: 1.125rem;
+    font-size: 1rem;
     margin-bottom: 1rem;
 }

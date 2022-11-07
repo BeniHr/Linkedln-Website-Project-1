@@ -56,6 +56,7 @@ function createUserProfileElement(user) {
     const userProfileAvatarElement = document.createElement('img');
     userProfileAvatarElement.classList.add('avatar');
     userProfileAvatarElement.src = user.personalData.avatar;
+    userProfileAvatarElement.loading = 'lazy';
 
     userProfileElement.appendChild(userProfileAvatarElement);
 

@@ -61,7 +61,12 @@ body {
 
 #main-section #account-info {
     flex: 1;
+    padding: 2rem 1rem;
     text-align: center;
+}
+
+#main-section #account-info #account .user-profile {
+    margin: 0 auto;
 }
 
 #main-section #feed {
@@ -72,20 +77,6 @@ body {
     padding: 2rem 1rem;
 }
 
-#main-section .feed-section .section-title {
-    color: var(--primary-color);
-    font-size: 2rem;
-    font-weight: bold;
-    letter-spacing: 0.125rem;
-    line-height: 2rem;
-}
-
-#main-section .feed-section .section-subtitles {
-    font-size: 1.25rem;
-    font-weight: 200;
-    margin-bottom: 1rem;
-}
-
 #main-section #feed #network {
     display: flex;
     gap: 1rem;
@@ -94,6 +85,20 @@ body {
 
 #footer {
     text-align: center;
+}
+
+.section-title {
+    color: var(--primary-color);
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 0.125rem;
+    line-height: 2rem;
+}
+
+.section-subtitles {
+    font-size: 1.25rem;
+    font-weight: 200;
+    margin-bottom: 1rem;
 }
 
 .user-profile {
@@ -117,6 +122,13 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--secondary-color);
+    line-height: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.user-profile .personal-data .full-name span {
+    color: var(--primary-color);
+    font-size: 1rem;
 }
 
 .user-profile .personal-data .job-title {

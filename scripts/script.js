@@ -2,24 +2,33 @@ let networkUsers = [];
 let skills = {};
 let positions = {};
 
+let currentUser = {};
+
 const maxDisplayedUsers = 10;
 
 const networkFeedElement = document.getElementById('network');
+const accountElement = document.getElementById('account');
 
 function getNetworkUsers() {
     let getNetworkUsersRequest = fetch(
-        'https://random-data-api.com/api/v2/users?size=100'
+        'https://random-data-api.com/api/v2/users?size=51'
     );
     getNetworkUsersRequest
         .then((Response) => Response.json())
         .then((data) => {
             networkUsers = data;
             let currentDisplayedUsers = 0;
+
+            currentUser = new NetworkUser(networkUsers[0]);
+            createUserProfileElement(currentUser, accountInfoElement);
+            // addAdditionalData()
+            networkUsers = networkUsers.slice(1);
+
             for (let networkUser of networkUsers) {
                 const user = new NetworkUser(networkUser);
 
                 if (currentDisplayedUsers !== maxDisplayedUsers) {
-                    createUserProfileElement(user);
+                    createUserProfileElement(user, networkFeedElement);
                     currentDisplayedUsers++;
                 }
 
@@ -48,7 +57,11 @@ function addPositionToList(position) {
     }
 }
 
-function createUserProfileElement(user) {
+function createUserProfileElement(user, parentElement) {
+    if (!parentElement) {
+        return;
+    }
+
     const userProfileElement = document.createElement('div');
     userProfileElement.classList.add('user-profile');
     userProfileElement.id = `user-profile-${user.id}`;
@@ -69,8 +82,21 @@ function createUserProfileElement(user) {
     const userFullName = document.createTextNode(
         `${user.personalData.firstName} ${user.personalData.lastName}`
     );
+
     userProfilePersonalDataName.appendChild(userFullName);
 
+    if (parentElement === accountElement) {
+        const userNameElement = document.createElement('span');
+        const userNameText = document.createTextNode(
+            `@${user.personalData.username}`
+        );
+
+        userNameElement.appendChild(userNameText);
+
+        userProfilePersonalDataName.appendChild(userNameElement);
+
+    }
+    
     const userProfilePersonalDataJobTitle = document.createElement('p');
     userProfilePersonalDataJobTitle.classList.add('job-title');
 
@@ -82,7 +108,7 @@ function createUserProfileElement(user) {
 
     userProfileElement.appendChild(userProfilePersonalDataElement);
 
-    networkFeedElement.appendChild(userProfileElement);
+    parentElement.appendChild(userProfileElement);
 }
 
 getNetworkUsers();

@@ -9,9 +9,10 @@ let positions = {};
 
 let currentUser = {};
 
-const maxDisplayedUsers = 7;
+const maxDisplayedUsers = 10;
 let totalPages = 0;
-let currentPage = 2;
+let currentPage = 1;
+let MostPopularSkill = '';
 
 const networkFeedElement = document.getElementById('network');
 const networkFeedResultNumberElement =
@@ -22,17 +23,15 @@ const accountElement = document.getElementById('account');
 
 function getNetworkUsers() {
     let getNetworkUsersRequest = fetch(
-        'https://random-data-api.com/api/v2/users?size=43'
+        'https://random-data-api.com/api/v2/users?size=90'
     );
     getNetworkUsersRequest
         .then((Response) => Response.json())
         .then((data) => {
             networkUsers = data;
-            let currentDisplayedUsers = 0;
 
             currentUser = new NetworkUser(networkUsers[0]);
             createUserProfileElement(currentUser, accountElement);
-            // addAdditionalData()
             networkUsers = networkUsers.slice(1);
             totalPages = Math.ceil(networkUsers.length / maxDisplayedUsers);
 
@@ -41,17 +40,16 @@ function getNetworkUsers() {
             for (let networkUser of networkUsers) {
                 const user = new NetworkUser(networkUser);
 
-                if (currentDisplayedUsers !== maxDisplayedUsers) {
-                    createUserProfileElement(user, networkFeedElement);
-                    currentDisplayedUsers++;
-                }
-
                 addSkillToList(user.employment.mainSkill);
                 addPositionToList(user.employment.position);
 
                 // addPlanToList(user.subscription.plan);
                 // addStatusToList(user.subscription.status);
             }
+
+            findMostPopularSkill();
+
+            generateNetworkFeed();
         })
         .catch((error) => {
             throw new Error();
@@ -63,6 +61,17 @@ function addSkillToList(skill) {
         skills[skill] += 1;
     } else {
         skills[skill] = 1;
+    }
+}
+
+function findMostPopularSkill() {
+    let MostPopularSkillCount = 0;
+
+    for (let skill in skills) {
+        if (skills[skill] > MostPopularSkillCount) {
+            MostPopularSkillCount = skills[skill];
+            MostPopularSkill = skill;
+        }
     }
 }
 
@@ -89,6 +98,23 @@ function addPositionToList(position) {
 //         planStatusIs[status] = 1;
 //     }
 // }
+
+function clearNetworkFeed() {
+    networkFeedElement.innerHTML = '';
+}
+
+function generateNetworkFeed() {
+    const startingIndex = (currentPage - 1) * maxDisplayedUsers;
+    const endingIndex =
+        currentPage === totalPages
+            ? networkUsers.length - 1
+            : currentPage * maxDisplayedUsers - 1;
+
+    for (let index = startingIndex; index < endingIndex; index++) {
+        const user = new NetworkUser(networkUsers[index]);
+        createUserProfileElement(user, networkFeedElement);
+    }
+}
 
 function createUserProfileElement(user, parentElement) {
     if (!parentElement) {
@@ -121,7 +147,9 @@ function createUserProfileElement(user, parentElement) {
     const userProfilePersonalDataJobTitle = document.createElement('p');
     userProfilePersonalDataJobTitle.classList.add('job-title');
 
-    const userJobTitle = document.createTextNode(user.employment.position);
+    const userJobTitle = document.createTextNode(
+        user.employment.mainSkill + ' @ ' + user.employment.position
+    );
     userProfilePersonalDataJobTitle.appendChild(userJobTitle);
 
     userProfilePersonalDataElement.appendChild(userProfilePersonalDataName);
@@ -162,6 +190,15 @@ function createUserProfileElement(user, parentElement) {
         userProfilePersonalDataName.appendChild(userBioElement);
     }
 
+    if (user.employment.mainSkill === MostPopularSkill) {
+        const popularSkillElement = document.createElement('div');
+        popularSkillElement.classList.add('popular-skill');
+        const popularSkillText = document.createTextNode('Popular Skill');
+        popularSkillElement.appendChild(popularSkillText);
+
+        userProfileElement.appendChild(popularSkillElement);
+    }
+
     parentElement.appendChild(userProfileElement);
 }
 
@@ -170,8 +207,33 @@ function getPagesConfiguration() {
         const pageNumberElement = document.createElement('div');
         pageNumberElement.classList.add('page-number');
 
+        pageNumberElement.setAttribute('data-page', pageNumber);
+
+        if (pageNumber === currentPage) {
+            pageNumberElement.classList.add('active');
+        }
+
         const pageNumberText = document.createTextNode(pageNumber);
         pageNumberElement.appendChild(pageNumberText);
+
+        pageNumberElement.addEventListener('click', (event) => {
+            const page = parseInt(event.target.getAttribute('data-page'));
+            // const page = parseInt(event.target.innerext)
+            if (page === currentPage) {
+                return;
+            }
+            currentPage = page;
+            setResultsNumberElement();
+
+            const currentActivePageElement = document.querySelector(
+                '.page-number.active'
+            );
+            currentActivePageElement.classList.remove('active');
+            clearNetworkFeed();
+
+            event.target.classList.add('active');
+            generateNetworkFeed();
+        });
 
         networkFeedPaginationElement.appendChild(pageNumberElement);
     }
